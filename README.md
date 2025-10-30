@@ -60,6 +60,16 @@ cd ../..
 bench --site your-site-name install-app erpnext_ai
 ```
 
+### Method 3: Provision a Fresh Bench on Ubuntu
+
+If you need a brand-new ERPNext environment, this repository ships with `install_erpnext.sh`. It installs all dependencies on Ubuntu 22.04/24.04, sets up Bench, creates a site, and installs ERPNext.
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/WIKKIwk/erpnext_ai/master/install_erpnext.sh | sudo bash
+```
+
+Environment variables such as `TARGET_USER`, `BENCH_NAME`, `SITE_NAME`, `FRAPPE_BRANCH`, `ERPNEXT_BRANCH`, and `SITE_ADMIN_PASSWORD` can be exported before running the script to customise the installation.
+
 ## ⚙️ Configuration
 
 ### 1. Assign Roles
