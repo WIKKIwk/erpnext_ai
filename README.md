@@ -20,10 +20,12 @@ AI assistant and reporting for ERPNext admins. The app adds a role-aware AI Comm
 ## 📋 Requirements
 
 - **Frappe**: v15.x
-- **ERPNext**: v15.x (recommended)
+- **ERPNext**: v15.x (**REQUIRED** - this app depends on ERPNext)
 - **Python**: 3.10 or higher
 - **Node.js**: 18.x or higher
 - **OpenAI API Key**: For AI features
+
+**Note:** This app requires ERPNext to be installed. It will not work with Frappe-only installations.
 
 ## 📦 Installation
 
