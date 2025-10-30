@@ -66,13 +66,13 @@ create_target_user() {
 		return
 	fi
 	log "Creating user ${user}."
-	local args=(--create-home --shell /bin/bash "${user}")
 	if [[ -n "${password}" ]]; then
-		args+=(--password "${password}")
+		useradd --create-home --shell /bin/bash "${user}"
+		echo "${user}:${password}" | chpasswd
 	else
-		args+=(--disabled-login)
+		useradd --create-home --shell /bin/bash "${user}"
+		passwd -l "${user}" >/dev/null 2>&1 || true
 	fi
-	adduser "${args[@]}"
 }
 
 configure_locale() {
