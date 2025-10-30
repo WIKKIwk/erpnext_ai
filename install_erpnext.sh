@@ -50,6 +50,7 @@ ensure_commands() {
 			fatal "Required command '${cmd}' not found."
 		fi
 	}
+	done
 }
 
 run_as_target() {
