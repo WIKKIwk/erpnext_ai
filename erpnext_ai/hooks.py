@@ -8,7 +8,7 @@ app_license = "mit"
 # Apps
 # ------------------
 
-# required_apps = []
+required_apps = ["erpnext"]
 fixtures = [
 	{
 		"doctype": "Role",

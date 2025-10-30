@@ -1,23 +1,9 @@
-[project]
-name = "erpnext_ai"
-authors = [
-    { name = "Codex Assistant", email = "codex@example.com"}
-]
-description = "AI assistant and reporting for ERPNext admins"
-requires-python = ">=3.10"
-readme = "README.md"
-dynamic = ["version"]
-dependencies = [
-    "openai>=1.16.0",
-    "python-telegram-bot>=20.7",
-    "cryptography>=42.0.5",
-    "requests>=2.31.0",
-    # "frappe~=15.0.0" # Installed and managed by bench.
-]
-
 [build-system]
-requires = ["flit_core >=3.4,<4"]
-build-backend = "flit_core.buildapi"
+requires = [
+	"setuptools>=65",
+	"wheel",
+]
+build-backend = "setuptools.build_meta"
 
 # These dependencies are only installed when developer mode is enabled
 [tool.bench.dev-dependencies]
@@ -29,28 +15,28 @@ target-version = "py310"
 
 [tool.ruff.lint]
 select = [
-    "F",
-    "E",
-    "W",
-    "I",
-    "UP",
-    "B",
-    "RUF",
+	"F",
+	"E",
+	"W",
+	"I",
+	"UP",
+	"B",
+	"RUF",
 ]
 ignore = [
-    "B017", # assertRaises(Exception) - should be more specific
-    "B018", # useless expression, not assigned to anything
-    "B023", # function doesn't bind loop variable - will have last iteration's value
-    "B904", # raise inside except without from
-    "E101", # indentation contains mixed spaces and tabs
-    "E402", # module level import not at top of file
-    "E501", # line too long
-    "E741", # ambiguous variable name
-    "F401", # "unused" imports
-    "F403", # can't detect undefined names from * import
-    "F405", # can't detect undefined names from * import
-    "F722", # syntax error in forward type annotation
-    "W191", # indentation contains tabs
+	"B017",  # assertRaises(Exception) - should be more specific
+	"B018",  # useless expression, not assigned to anything
+	"B023",  # function doesn't bind loop variable - will have last iteration's value
+	"B904",  # raise inside except without from
+	"E101",  # indentation contains mixed spaces and tabs
+	"E402",  # module level import not at top of file
+	"E501",  # line too long
+	"E741",  # ambiguous variable name
+	"F401",  # "unused" imports
+	"F403",  # can't detect undefined names from * import
+	"F405",  # can't detect undefined names from * import
+	"F722",  # syntax error in forward type annotation
+	"W191",  # indentation contains tabs
 ]
 typing-modules = ["frappe.types.DF"]
 

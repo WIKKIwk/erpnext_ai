@@ -34,7 +34,7 @@ AI assistant and reporting for ERPNext admins. The app adds a role-aware AI Comm
 cd /path/to/your/bench
 
 # Get the app from GitHub
-bench get-app https://github.com/YOUR-USERNAME/erpnext_ai.git
+bench get-app https://github.com/WIKKIwk/erpnext_ai.git
 
 # Install the app on your site
 bench --site your-site-name install-app erpnext_ai
@@ -49,7 +49,7 @@ bench build
 ```bash
 # Clone the repository
 cd apps
-git clone https://github.com/YOUR-USERNAME/erpnext_ai.git
+git clone https://github.com/WIKKIwk/erpnext_ai.git
 
 # Install dependencies
 cd erpnext_ai
