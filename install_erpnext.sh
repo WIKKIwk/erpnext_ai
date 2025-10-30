@@ -58,6 +58,17 @@ run_as_target() {
 	sudo -H -u "${target_user}" bash -lc "export PATH=\"\$HOME/.local/bin:\$PATH\"; $*"
 }
 
+normalize_python_spec() {
+	local spec="$1"
+	if [[ "${spec}" =~ ^python[0-9]+\.[0-9]+$ ]]; then
+		printf '%s\n' "${spec}"
+	elif [[ "${spec}" =~ ^[0-9]+\.[0-9]+$ ]]; then
+		printf 'python%s\n' "${spec}"
+	else
+		printf '%s\n' "${spec}"
+	fi
+}
+
 create_target_user() {
 	local user="$1"
 	local password="$2"
@@ -85,58 +96,58 @@ configure_locale() {
 install_apt_dependencies() {
 	local node_major="$1"
 	local python_pkg="$2"
-	local python_major_minor="${python_pkg#python}"
 	log "Installing system packages via apt."
 	export DEBIAN_FRONTEND=noninteractive
 	apt-get update
 
 	apt-get install -y software-properties-common
-	case "${python_pkg}" in
-		python3.10|python3.11|python3.12)
-			log "Using native Ubuntu repository for ${python_pkg}."
-			;;
-		*)
-			if ! apt-cache show "${python_pkg}" >/dev/null 2>&1; then
-				log "Adding deadsnakes PPA for ${python_pkg}."
-				add-apt-repository -y ppa:deadsnakes/ppa
-				apt-get update
-			fi
-			;;
-	esac
 
 	# MariaDB root password pre-seed to avoid interactive prompt
 	debconf-set-selections <<<"mariadb-server mysql-server/root_password password ${MYSQL_ROOT_PASSWORD}"
 	debconf-set-selections <<<"mariadb-server mysql-server/root_password_again password ${MYSQL_ROOT_PASSWORD}"
 
-	apt-get install -y \
-		build-essential \
-		curl \
-		git \
-		mariadb-server \
-		mariadb-client \
-		"${python_pkg}" \
-		"${python_pkg}-dev" \
-		"${python_pkg}-venv" \
-		python3-pip \
-		python3-wheel \
-		redis-server \
-		xvfb \
-		libfontconfig \
-		libfreetype6 \
-		libjpeg-dev \
-		liblcms2-dev \
-		libtiff-dev \
-		libwebp-dev \
-		libx11-6 \
-		libxext6 \
-		libxrender1 \
-		libharfbuzz0b \
-		libfribidi0 \
-		wkhtmltopdf \
-		pipx \
-		apt-transport-https \
-		ca-certificates \
+	local base_packages=(
+		build-essential
+		curl
+		git
+		mariadb-server
+		mariadb-client
+		python3-pip
+		python3-wheel
+		redis-server
+		xvfb
+		libfontconfig1
+		libfreetype6
+		libjpeg-dev
+		liblcms2-dev
+		libtiff-dev
+		libwebp-dev
+		libx11-6
+		libxext6
+		libxrender1
+		libharfbuzz0b
+		libfribidi0
+		wkhtmltopdf
+		pipx
+		apt-transport-https
+		ca-certificates
 		gnupg
+	)
+
+	local python_packages=(
+		"${python_pkg}"
+		"${python_pkg}-dev"
+		"${python_pkg}-venv"
+	)
+
+	if ! apt-get install -y "${base_packages[@]}" "${python_packages[@]}"; then
+		log_warn "Primary apt install failed; attempting to enable deadsnakes PPA and retry."
+		if ! grep -Rqs "deadsnakes" /etc/apt/sources.list /etc/apt/sources.list.d/*.list 2>/dev/null; then
+			add-apt-repository -y ppa:deadsnakes/ppa
+		fi
+		apt-get update
+		apt-get install -y "${base_packages[@]}" "${python_packages[@]}"
+	fi
 
 	log "Setting up Node.js ${node_major}.x via NodeSource."
 	curl -fsSL "https://deb.nodesource.com/setup_${node_major}.x" | bash -
@@ -256,7 +267,8 @@ SITE_DOMAIN="${SITE_DOMAIN:-${SITE_NAME}}"
 SITE_ADMIN_PASSWORD="${SITE_ADMIN_PASSWORD:-Admin@123}"
 MYSQL_ROOT_PASSWORD="${MYSQL_ROOT_PASSWORD:-dbroot}"
 NODE_MAJOR_VERSION="${NODE_MAJOR_VERSION:-18}"
-PYTHON_VERSION="${PYTHON_VERSION:-python3.10}"
+PYTHON_INPUT="${PYTHON_VERSION:-python3.10}"
+PYTHON_VERSION="$(normalize_python_spec "${PYTHON_INPUT}")"
 INSTALL_PRODUCTION="${INSTALL_PRODUCTION:-false}"
 
 create_target_user "${TARGET_USER}" "${TARGET_USER_PASSWORD}"
