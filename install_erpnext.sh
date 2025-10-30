@@ -49,7 +49,6 @@ ensure_commands() {
 		if ! command -v "${cmd}" >/dev/null 2>&1; then
 			fatal "Required command '${cmd}' not found."
 		fi
-	}
 	done
 }
 
