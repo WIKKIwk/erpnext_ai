@@ -85,16 +85,24 @@ configure_locale() {
 install_apt_dependencies() {
 	local node_major="$1"
 	local python_pkg="$2"
+	local python_major_minor="${python_pkg#python}"
 	log "Installing system packages via apt."
 	export DEBIAN_FRONTEND=noninteractive
 	apt-get update
 
 	apt-get install -y software-properties-common
-	if ! apt-cache show "${python_pkg}" >/dev/null 2>&1; then
-		log "Adding deadsnakes PPA for ${python_pkg}."
-		add-apt-repository -y ppa:deadsnakes/ppa
-		apt-get update
-	fi
+	case "${python_pkg}" in
+		python3.10|python3.11|python3.12)
+			log "Using native Ubuntu repository for ${python_pkg}."
+			;;
+		*)
+			if ! apt-cache show "${python_pkg}" >/dev/null 2>&1; then
+				log "Adding deadsnakes PPA for ${python_pkg}."
+				add-apt-repository -y ppa:deadsnakes/ppa
+				apt-get update
+			fi
+			;;
+	esac
 
 	# MariaDB root password pre-seed to avoid interactive prompt
 	debconf-set-selections <<<"mariadb-server mysql-server/root_password password ${MYSQL_ROOT_PASSWORD}"
