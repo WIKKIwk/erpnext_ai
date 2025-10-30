@@ -37,6 +37,7 @@ IFS=$'\n\t'
 log()   { printf '==> %s\n' "$*"; }
 warn()  { printf 'WARNING: %s\n' "$*" >&2; }
 fatal() { printf 'ERROR: %s\n' "$*" >&2; exit 1; }
+log_warn() { warn "$@"; }
 
 require_root() {
 	if [[ "${EUID}" -ne 0 ]]; then
