@@ -35,7 +35,7 @@ AI assistant and reporting for ERPNext admins. The app adds a role-aware AI Comm
 # Navigate to your bench directory
 cd /path/to/your/bench
 
-# Get the app from GitHub
+# Get the app from GitHub (run after installing frappe/erpnext core apps)
 bench get-app https://github.com/WIKKIwk/erpnext_ai.git
 
 # Install the app on your site
