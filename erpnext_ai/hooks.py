@@ -156,7 +156,7 @@ fixtures = [
 
 scheduler_events = {
 	"daily": [
-		"erpnext_ai.erpnext_ai.tasks.generate_daily_admin_summary"
+		"erpnext_ai.tasks.generate_daily_admin_summary"
 	],
 }
 
