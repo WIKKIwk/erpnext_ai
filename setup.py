@@ -13,7 +13,14 @@ def load_requirements(path: str) -> list[str]:
 
 
 # get version from __version__ variable in erpnext_ai/__init__.py
-from erpnext_ai import __version__ as version
+def get_version():
+	init_file = Path(__file__).parent / "erpnext_ai" / "__init__.py"
+	for line in init_file.read_text(encoding="utf-8").splitlines():
+		if line.startswith("__version__"):
+			return line.split("=")[1].strip().strip('"').strip("'")
+	return "0.0.1"
+
+version = get_version()
 
 setup(
 	name="erpnext_ai",
